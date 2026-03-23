@@ -46,7 +46,7 @@ class WP_Alias_Admin {
         if ( isset( $_POST['wp_alias_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wp_alias_nonce'] ) ), 'wp_alias_save' ) ) {
             $alias      = trim( sanitize_text_field( wp_unslash( $_POST['alias'] ?? '' ) ), '/' );
             $target_url = esc_url_raw( wp_unslash( $_POST['target_url'] ?? '' ) );
-            $edit_id    = (int) wp_unslash( $_POST['edit_id'] ?? 0 );
+            $edit_id    = absint( wp_unslash( $_POST['edit_id'] ?? 0 ) );
 
             if ( $alias === '' || $target_url === '' ) {
                 $notice = '<div class="notice notice-error"><p>' . esc_html__( 'Alias und Ziel-URL dürfen nicht leer sein.', 'wp-alias' ) . '</p></div>';

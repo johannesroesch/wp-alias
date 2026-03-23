@@ -21,3 +21,6 @@ composer.lock
 # Temporäre Dateien
 run-tests.php
 test-results.txt
+
+# wp-env (wird von der plugin-check-action zur Laufzeit erzeugt)
+.wp-env.json

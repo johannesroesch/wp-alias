@@ -20,7 +20,7 @@ jobs:
         with:
           build-dir: './'
           exclude-directories: 'vendor,tests,.github'
-          exclude-files: '.wp-env.json,.gitignore'
+          exclude-files: '.gitignore'
 
   test:
     name: PHP ${{ matrix.php }}

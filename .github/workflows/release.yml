@@ -49,7 +49,7 @@ jobs:
         with:
           build-dir: './'
           exclude-directories: 'vendor,tests,.github'
-          exclude-files: '.wp-env.json,.gitignore'
+          exclude-files: '.gitignore'
 
   # -----------------------------------------------------------------------
   # 3. Produktions-ZIP bauen und GitHub-Release erstellen
