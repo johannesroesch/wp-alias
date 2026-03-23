@@ -34,6 +34,45 @@ final class AliasRedirectorTest extends WpDbTestCase
         Functions\when('wp_parse_url')->alias('parse_url');
     }
 
+    /**
+     * Mockt alle WP-Funktionen für einen erfolgreichen Redirect-Pfad,
+     * führt maybe_redirect() aus und erwartet die redirect_called-Exception.
+     *
+     * @param string $request_uri  Wert für $_SERVER['REQUEST_URI']
+     * @param string $home_url     Rückgabe von home_url()
+     * @param string $alias        Alias-Slug, mit dem prepare() aufgerufen wird
+     * @param string $target_url   Rückgabe von get_var() (Redirect-Ziel)
+     */
+    private function assert_redirect_called(
+        string $request_uri,
+        string $home_url,
+        string $alias,
+        string $target_url
+    ): void {
+        $_SERVER['REQUEST_URI'] = $request_uri;
+
+        Functions\expect('is_admin')->once()->andReturn(false);
+        Functions\expect('wp_doing_ajax')->once()->andReturn(false);
+        Functions\expect('wp_doing_cron')->once()->andReturn(false);
+        Functions\expect('home_url')->once()->andReturn($home_url);
+
+        $this->wpdb->shouldReceive('prepare')
+            ->once()
+            ->with(\Mockery::type('string'), $alias)
+            ->andReturn('...');
+        $this->wpdb->shouldReceive('get_var')->once()->andReturn($target_url);
+
+        Functions\expect('wp_redirect')
+            ->once()
+            ->andReturnUsing(function () {
+                throw new \RuntimeException('redirect_called');
+            });
+
+        $this->expectException(\RuntimeException::class);
+
+        Alias_Manager_Redirector::maybe_redirect();
+    }
+
     protected function tearDown(): void
     {
         unset($_SERVER['REQUEST_URI']);
@@ -157,91 +196,31 @@ final class AliasRedirectorTest extends WpDbTestCase
 
     public function test_redirect_ignores_query_string_in_request_uri(): void
     {
-        $_SERVER['REQUEST_URI'] = '/my-alias?utm_source=email&utm_medium=cpc';
-
-        Functions\expect('is_admin')->once()->andReturn(false);
-        Functions\expect('wp_doing_ajax')->once()->andReturn(false);
-        Functions\expect('wp_doing_cron')->once()->andReturn(false);
-        Functions\expect('home_url')->once()->andReturn('https://example.com');
-
-        // find_by_alias muss mit 'my-alias' aufgerufen werden, nicht mit dem Query-String
-        $this->wpdb
-            ->shouldReceive('prepare')
-            ->once()
-            ->with(\Mockery::type('string'), 'my-alias')
-            ->andReturn('...');
-
-        $this->wpdb->shouldReceive('get_var')->once()->andReturn('https://example.com/page');
-
-        Functions\expect('wp_redirect')
-            ->once()
-            ->with('https://example.com/page', 301)
-            ->andReturnUsing(function () {
-                throw new \RuntimeException('redirect_called');
-            });
-
-        $this->expectException(\RuntimeException::class);
-
-        Alias_Manager_Redirector::maybe_redirect();
+        $this->assert_redirect_called(
+            '/my-alias?utm_source=email&utm_medium=cpc',
+            'https://example.com',
+            'my-alias',
+            'https://example.com/page'
+        );
     }
 
     public function test_redirect_strips_subdirectory_prefix(): void
     {
-        // WordPress liegt in /subdir/, Alias heißt "aliasB"
-        $_SERVER['REQUEST_URI'] = '/subdir/aliasB';
-
-        Functions\expect('is_admin')->once()->andReturn(false);
-        Functions\expect('wp_doing_ajax')->once()->andReturn(false);
-        Functions\expect('wp_doing_cron')->once()->andReturn(false);
-        Functions\expect('home_url')->once()->andReturn('https://example.com/subdir');
-
-        // Erwartet: find_by_alias wird mit "aliasB" aufgerufen (ohne Präfix)
-        $this->wpdb
-            ->shouldReceive('prepare')
-            ->once()
-            ->with(\Mockery::type('string'), 'aliasB')
-            ->andReturn('...');
-
-        $this->wpdb->shouldReceive('get_var')->once()->andReturn('https://example.com/subdir/pageB');
-
-        Functions\expect('wp_redirect')
-            ->once()
-            ->with('https://example.com/subdir/pageB', 301)
-            ->andReturnUsing(function () {
-                throw new \RuntimeException('redirect_called');
-            });
-
-        $this->expectException(\RuntimeException::class);
-
-        Alias_Manager_Redirector::maybe_redirect();
+        $this->assert_redirect_called(
+            '/subdir/aliasB',
+            'https://example.com/subdir',
+            'aliasB',
+            'https://example.com/subdir/pageB'
+        );
     }
 
     public function test_redirect_handles_trailing_slash_in_request(): void
     {
-        $_SERVER['REQUEST_URI'] = '/aliasA/';
-
-        Functions\expect('is_admin')->once()->andReturn(false);
-        Functions\expect('wp_doing_ajax')->once()->andReturn(false);
-        Functions\expect('wp_doing_cron')->once()->andReturn(false);
-        Functions\expect('home_url')->once()->andReturn('https://example.com');
-
-        // trim('/') muss "aliasA" ergeben, nicht "aliasA/"
-        $this->wpdb
-            ->shouldReceive('prepare')
-            ->once()
-            ->with(\Mockery::type('string'), 'aliasA')
-            ->andReturn('...');
-
-        $this->wpdb->shouldReceive('get_var')->once()->andReturn('https://example.com/pageA');
-
-        Functions\expect('wp_redirect')
-            ->once()
-            ->andReturnUsing(function () {
-                throw new \RuntimeException('redirect_called');
-            });
-
-        $this->expectException(\RuntimeException::class);
-
-        Alias_Manager_Redirector::maybe_redirect();
+        $this->assert_redirect_called(
+            '/aliasA/',
+            'https://example.com',
+            'aliasA',
+            'https://example.com/pageA'
+        );
     }
 }
