@@ -86,6 +86,19 @@ final class AliasRedirectorTest extends TestCase
         Alias_Manager_Redirector::maybe_redirect();
     }
 
+    public function test_no_redirect_when_request_uri_not_set(): void
+    {
+        unset( $_SERVER['REQUEST_URI'] );
+
+        Functions\expect('is_admin')->once()->andReturn(false);
+        Functions\expect('wp_doing_ajax')->once()->andReturn(false);
+        Functions\expect('wp_doing_cron')->once()->andReturn(false);
+        Functions\expect('home_url')->once()->andReturn('https://example.com');
+        Functions\expect('wp_redirect')->never();
+
+        Alias_Manager_Redirector::maybe_redirect();
+    }
+
     public function test_no_redirect_when_request_path_is_empty(): void
     {
         $_SERVER['REQUEST_URI'] = '/';

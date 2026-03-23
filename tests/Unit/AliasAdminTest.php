@@ -388,6 +388,45 @@ final class AliasAdminTest extends TestCase
     // render_page() – Tabelle mit und ohne Aliases
     // -------------------------------------------------------------------------
 
+    public function test_render_page_renders_page_options_when_pages_exist(): void
+    {
+        $page             = new \stdClass();
+        $page->ID         = 42;
+        $page->post_title = 'Sample Page';
+
+        Functions\expect('current_user_can')->once()->andReturn(true);
+
+        // Override get_pages to return a page object
+        Functions\when('esc_html__')->returnArg();
+        Functions\when('__')->returnArg();
+        Functions\when('esc_attr')->returnArg();
+        Functions\when('esc_url')->returnArg();
+        Functions\when('esc_html')->returnArg();
+        Functions\when('esc_html_e')->alias(static function (string $t): void { echo $t; });
+        Functions\when('esc_attr_e')->alias(static function (string $t): void { echo $t; });
+        Functions\when('home_url')->justReturn('https://example.com/');
+        Functions\when('get_pages')->justReturn([$page]);
+        Functions\when('get_permalink')->justReturn('https://example.com/sample-page');
+        Functions\when('wp_nonce_field')->justReturn('');
+        Functions\when('submit_button')->justReturn('');
+        Functions\when('admin_url')->justReturn('options-general.php');
+        Functions\when('add_query_arg')->justReturn('options-general.php?page=alias-manager');
+        Functions\when('wp_nonce_url')->justReturn('options-general.php?_wpnonce=abc');
+        Functions\when('get_option')->justReturn('Y-m-d');
+        Functions\when('date_i18n')->justReturn('2025-01-01');
+        Functions\when('wp_unslash')->returnArg();
+        Functions\when('sanitize_text_field')->returnArg();
+
+        $this->wpdb->shouldReceive('get_results')->andReturn([]);
+
+        ob_start();
+        Alias_Manager_Admin::render_page();
+        $output = ob_get_clean();
+
+        $this->assertStringContainsString('Sample Page', $output);
+        $this->assertStringContainsString('https://example.com/sample-page', $output);
+    }
+
     public function test_render_page_shows_empty_message_when_no_aliases(): void
     {
         Functions\expect('current_user_can')->once()->andReturn(true);

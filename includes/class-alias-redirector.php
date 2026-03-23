@@ -47,7 +47,7 @@ class Alias_Manager_Redirector {
         if ( $target ) {
             // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- Target URL is admin-controlled and stored in the database; external redirects are intentional.
             wp_redirect( $target, 301 );
-            exit;
+            exit; // @codeCoverageIgnore
         }
     }
 }
