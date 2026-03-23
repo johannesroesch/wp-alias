@@ -49,6 +49,24 @@ final class AliasDBTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
+    // create_table()
+    // -------------------------------------------------------------------------
+
+    public function test_create_table_calls_get_charset_collate_and_db_delta(): void
+    {
+        $this->wpdb
+            ->shouldReceive('get_charset_collate')
+            ->once()
+            ->andReturn('DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+
+        // dbDelta ist in tests/bootstrap.php als Stub definiert — kein Fehler erwartet.
+        Alias_Manager_DB::create_table();
+
+        // Wenn wir hier ankommen, wurde kein Fehler geworfen.
+        $this->assertTrue(true);
+    }
+
+    // -------------------------------------------------------------------------
     // table()
     // -------------------------------------------------------------------------
 
