@@ -52,6 +52,7 @@ final class AliasManagerTest extends TestCase
             ->with(\Mockery::type('string'), ['Alias_Manager_DB', 'create_table']);
 
         require_once dirname(__DIR__, 2) . '/alias-manager.php';
+        $this->addToAssertionCount(1);
     }
 
     /**
@@ -73,5 +74,6 @@ final class AliasManagerTest extends TestCase
             ->with('plugins_loaded', ['Alias_Manager_Admin', 'init']);
 
         require_once dirname(__DIR__, 2) . '/alias-manager.php';
+        $this->addToAssertionCount(1);
     }
 }
