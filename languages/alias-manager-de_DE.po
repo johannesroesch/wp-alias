@@ -1,0 +1,125 @@
+# German translation of Alias Manager
+# Copyright (C) 2025 Johannes Rösch
+# Johannes Rösch <johannes.roesch@googlemail.com>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Alias Manager 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/johannesroesch/alias-manager/issues\n"
+"POT-Creation-Date: 2025-03-23T00:00:00+00:00\n"
+"PO-Revision-Date: 2025-03-23T00:00:00+00:00\n"
+"Last-Translator: Johannes Rösch <johannes.roesch@googlemail.com>\n"
+"Language-Team: German\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. Plugin Name of the plugin
+msgid "Alias Manager"
+msgstr "Alias Manager"
+
+#. Description of the plugin
+msgid "Manage URL aliases for WordPress pages with automatic 301 redirects."
+msgstr "URL-Aliase für WordPress-Seiten verwalten mit automatischer 301-Weiterleitung."
+
+#: admin/class-alias-admin.php
+msgid "Alias deleted."
+msgstr "Alias gelöscht."
+
+#: admin/class-alias-admin.php
+msgid "Alias and target URL must not be empty."
+msgstr "Alias und Ziel-URL dürfen nicht leer sein."
+
+#: admin/class-alias-admin.php
+msgid "Alias updated."
+msgstr "Alias aktualisiert."
+
+#: admin/class-alias-admin.php
+msgid "Update failed. The alias slug may already be in use."
+msgstr "Fehler beim Aktualisieren. Der Alias-Slug ist möglicherweise bereits vergeben."
+
+#: admin/class-alias-admin.php
+msgid "Alias added."
+msgstr "Alias angelegt."
+
+#: admin/class-alias-admin.php
+msgid "Error: Alias slug already in use or invalid input."
+msgstr "Fehler: Alias-Slug bereits vergeben oder ungültige Eingabe."
+
+#: admin/class-alias-admin.php
+msgid "Update Alias"
+msgstr "Alias aktualisieren"
+
+#: admin/class-alias-admin.php
+msgid "Add Alias"
+msgstr "Alias anlegen"
+
+#: admin/class-alias-admin.php
+msgid "Edit Alias"
+msgstr "Alias bearbeiten"
+
+#: admin/class-alias-admin.php
+msgid "Add New Alias"
+msgstr "Neuen Alias anlegen"
+
+#: admin/class-alias-admin.php
+msgid "Alias Path"
+msgstr "Alias-Pfad"
+
+#: admin/class-alias-admin.php
+msgid "Enter the slug only, e.g. \"my-page\" for example.com/my-page"
+msgstr "Nur den Slug eingeben, z. B. \"meine-seite\" für example.com/meine-seite"
+
+#: admin/class-alias-admin.php
+msgid "Select Page"
+msgstr "Seite auswählen"
+
+#: admin/class-alias-admin.php
+msgid "&mdash; Select a page &mdash;"
+msgstr "&mdash; Seite wählen &mdash;"
+
+#: admin/class-alias-admin.php
+msgid "Automatically fills in the target URL field."
+msgstr "Füllt das Ziel-URL-Feld automatisch aus."
+
+#: admin/class-alias-admin.php
+msgid "Target URL"
+msgstr "Ziel-URL"
+
+#: admin/class-alias-admin.php
+msgid "Full URL of the target. Visitors will be redirected via 301."
+msgstr "Vollständige URL des Ziels. Besucher werden per 301-Redirect weitergeleitet."
+
+#: admin/class-alias-admin.php
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: admin/class-alias-admin.php
+msgid "Existing Aliases"
+msgstr "Vorhandene Aliase"
+
+#: admin/class-alias-admin.php
+msgid "No aliases have been added yet."
+msgstr "Noch keine Aliase angelegt."
+
+#: admin/class-alias-admin.php
+msgid "Created"
+msgstr "Erstellt am"
+
+#: admin/class-alias-admin.php
+msgid "Actions"
+msgstr "Aktionen"
+
+#: admin/class-alias-admin.php
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: admin/class-alias-admin.php
+msgid "Really delete this alias?"
+msgstr "Alias wirklich löschen?"
+
+#: admin/class-alias-admin.php
+msgid "Delete"
+msgstr "Löschen"
