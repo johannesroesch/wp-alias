@@ -1,8 +1,8 @@
-=== Alias Redirects ===
+=== WP Alias ===
 Contributors: johannesroesch
 Tags: redirect, alias, url, permalink, 301
 Requires at least: 5.9
-Tested up to: 6.7
+Tested up to: 6.9
 Stable tag: 1.0.0
 Requires PHP: 8.1
 License: GPLv2 or later
