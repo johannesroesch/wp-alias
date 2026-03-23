@@ -1,4 +1,11 @@
 <?php
+/**
+ * Unit tests for Alias Manager.
+ *
+ * @package   Alias_Manager
+ * @copyright 2025 Johannes Rösch
+ * @license   GPL-2.0+
+ */
 declare(strict_types=1);
 
 namespace WPAlias\Tests\Unit;

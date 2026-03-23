@@ -1,4 +1,11 @@
 <?php
+/**
+ * PHPUnit bootstrap for Alias Manager tests.
+ *
+ * @package   Alias_Manager
+ * @copyright 2025 Johannes Rösch
+ * @license   GPL-2.0+
+ */
 declare(strict_types=1);
 
 // WordPress-Konstanten simulieren (kein WP-Core nötig)
