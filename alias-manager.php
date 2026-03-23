@@ -1,15 +1,18 @@
 <?php
 /**
- * Plugin Name: Alias Manager
- * Description: Manage URL aliases for WordPress pages with automatic 301 redirects.
- * Version:     1.0.0
- * Author:      Johannes Rösch
- * Author URI:  https://github.com/johannesroesch
- * Plugin URI:  https://github.com/johannesroesch/alias-manager
- * Text Domain: alias-manager
- * Domain Path: /languages
- * License:     GPL-2.0+
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Plugin Name:       Alias Manager
+ * Plugin URI:        https://github.com/johannesroesch/alias-manager
+ * Description:       Manage URL aliases for WordPress pages with automatic 301 redirects.
+ * Version:           1.0.0
+ * Requires at least: 5.9
+ * Requires PHP:      8.1
+ * Author:            Johannes Rösch
+ * Author URI:        https://github.com/johannesroesch
+ * License:           GPL-2.0+
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:       alias-manager
+ * Domain Path:       /languages
+ * Update URI:        https://github.com/johannesroesch/alias-manager
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
