@@ -10,10 +10,7 @@ declare(strict_types=1);
 
 namespace WPAlias\Tests\Unit;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Alias_Manager_Redirector;
 
 /**
@@ -24,34 +21,22 @@ use Alias_Manager_Redirector;
  * Der `exit`-Aufruf nach dem Redirect wird durch eine Exception im wp_redirect-Mock
  * abgefangen, damit der eigentliche PHPUnit-Prozess weiterläuft.
  */
-final class AliasRedirectorTest extends TestCase
+final class AliasRedirectorTest extends WpDbTestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var \Mockery\MockInterface */
-    private $wpdb;
 
     protected function setUp(): void
     {
         parent::setUp();
-        Monkey\setUp();
-
-        $this->wpdb         = \Mockery::mock('wpdb');
-        $this->wpdb->prefix = 'wp_';
-        $GLOBALS['wpdb']    = $this->wpdb;
 
         $_SERVER['REQUEST_URI'] = '/';
 
-        // wp_unslash gibt den Wert unverändert zurück (kein Slashing nötig im Test)
         Functions\when('wp_unslash')->returnArg();
-        // wp_parse_url delegiert an natives parse_url
         Functions\when('wp_parse_url')->alias('parse_url');
     }
 
     protected function tearDown(): void
     {
-        Monkey\tearDown();
-        unset($GLOBALS['wpdb'], $_SERVER['REQUEST_URI']);
+        unset($_SERVER['REQUEST_URI']);
         parent::tearDown();
     }
 

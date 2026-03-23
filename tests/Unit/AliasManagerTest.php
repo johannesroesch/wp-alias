@@ -10,10 +10,7 @@ declare(strict_types=1);
 
 namespace WPAlias\Tests\Unit;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Tests für alias-manager.php (Plugin-Einstiegspunkt).
@@ -21,21 +18,8 @@ use PHPUnit\Framework\TestCase;
  * @runInSeparateProcess lädt die Datei in einem frischen Prozess,
  * damit define() und require_once ungestört ausgeführt werden können.
  */
-final class AliasManagerTest extends TestCase
+final class AliasManagerTest extends WpTestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        Monkey\setUp();
-    }
-
-    protected function tearDown(): void
-    {
-        Monkey\tearDown();
-        parent::tearDown();
-    }
 
     /**
      * @runInSeparateProcess

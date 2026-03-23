@@ -10,32 +10,18 @@ declare(strict_types=1);
 
 namespace WPAlias\Tests\Unit;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Alias_Manager_Admin;
 
 /**
  * Tests für Alias_Manager_Admin.
  */
-final class AliasAdminTest extends TestCase
+final class AliasAdminTest extends WpDbTestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var \Mockery\MockInterface */
-    private $wpdb;
 
     protected function setUp(): void
     {
         parent::setUp();
-        Monkey\setUp();
-
-        $this->wpdb         = \Mockery::mock('wpdb');
-        $this->wpdb->prefix = 'wp_';
-        // phpcs:ignore WordPress.WP.GlobalVariablesOverride
-        $GLOBALS['wpdb'] = $this->wpdb;
-
         $_GET  = [];
         $_POST = [];
     }
@@ -44,8 +30,6 @@ final class AliasAdminTest extends TestCase
     {
         $_GET  = [];
         $_POST = [];
-        unset($GLOBALS['wpdb']);
-        Monkey\tearDown();
         parent::tearDown();
     }
 
@@ -57,7 +41,7 @@ final class AliasAdminTest extends TestCase
      * Mockt alle WP-Ausgabefunktionen, die render_page() für das HTML-Rendering
      * benötigt. Ermöglicht Tests, die sich auf das Verhalten konzentrieren.
      */
-    private function setupRenderMocks(array $aliases = []): void
+    private function setupRenderMocks(array $aliases = [], array $pages = [], string $permalink = 'https://example.com/page'): void
     {
         Functions\when('esc_html__')->returnArg();
         Functions\when('__')->returnArg();
@@ -67,7 +51,8 @@ final class AliasAdminTest extends TestCase
         Functions\when('esc_html_e')->alias(static function (string $t): void { echo $t; });
         Functions\when('esc_attr_e')->alias(static function (string $t): void { echo $t; });
         Functions\when('home_url')->justReturn('https://example.com/');
-        Functions\when('get_pages')->justReturn([]);
+        Functions\when('get_pages')->justReturn($pages);
+        Functions\when('get_permalink')->justReturn($permalink);
         Functions\when('wp_nonce_field')->justReturn('');
         Functions\when('submit_button')->justReturn('');
         Functions\when('admin_url')->justReturn('options-general.php');
@@ -75,7 +60,6 @@ final class AliasAdminTest extends TestCase
         Functions\when('wp_nonce_url')->justReturn('options-general.php?_wpnonce=abc');
         Functions\when('get_option')->justReturn('Y-m-d');
         Functions\when('date_i18n')->justReturn('2025-01-01');
-        Functions\when('get_permalink')->justReturn('https://example.com/page');
         Functions\when('wp_unslash')->returnArg();
         Functions\when('sanitize_text_field')->returnArg();
 
@@ -429,29 +413,7 @@ final class AliasAdminTest extends TestCase
         $page->post_title = 'Sample Page';
 
         Functions\expect('current_user_can')->once()->andReturn(true);
-
-        // Override get_pages to return a page object
-        Functions\when('esc_html__')->returnArg();
-        Functions\when('__')->returnArg();
-        Functions\when('esc_attr')->returnArg();
-        Functions\when('esc_url')->returnArg();
-        Functions\when('esc_html')->returnArg();
-        Functions\when('esc_html_e')->alias(static function (string $t): void { echo $t; });
-        Functions\when('esc_attr_e')->alias(static function (string $t): void { echo $t; });
-        Functions\when('home_url')->justReturn('https://example.com/');
-        Functions\when('get_pages')->justReturn([$page]);
-        Functions\when('get_permalink')->justReturn('https://example.com/sample-page');
-        Functions\when('wp_nonce_field')->justReturn('');
-        Functions\when('submit_button')->justReturn('');
-        Functions\when('admin_url')->justReturn('options-general.php');
-        Functions\when('add_query_arg')->justReturn('options-general.php?page=alias-manager');
-        Functions\when('wp_nonce_url')->justReturn('options-general.php?_wpnonce=abc');
-        Functions\when('get_option')->justReturn('Y-m-d');
-        Functions\when('date_i18n')->justReturn('2025-01-01');
-        Functions\when('wp_unslash')->returnArg();
-        Functions\when('sanitize_text_field')->returnArg();
-
-        $this->wpdb->shouldReceive('get_results')->andReturn([]);
+        $this->setupRenderMocks([], [$page], 'https://example.com/sample-page');
 
         ob_start();
         Alias_Manager_Admin::render_page();

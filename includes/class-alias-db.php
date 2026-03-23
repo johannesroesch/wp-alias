@@ -73,10 +73,7 @@ class Alias_Manager_DB {
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Write operation; caching not applicable.
         return $wpdb->insert(
             self::table(),
-            array(
-                'alias'      => sanitize_text_field( $alias ),
-                'target_url' => esc_url_raw( $target_url ),
-            ),
+            self::sanitize_data( $alias, $target_url ),
             array( '%s', '%s' )
         );
     }
@@ -86,13 +83,17 @@ class Alias_Manager_DB {
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Write operation; caching not applicable.
         return $wpdb->update(
             self::table(),
-            array(
-                'alias'      => sanitize_text_field( $alias ),
-                'target_url' => esc_url_raw( $target_url ),
-            ),
+            self::sanitize_data( $alias, $target_url ),
             array( 'id' => (int) $id ),
             array( '%s', '%s' ),
             array( '%d' )
+        );
+    }
+
+    private static function sanitize_data( string $alias, string $target_url ): array {
+        return array(
+            'alias'      => sanitize_text_field( $alias ),
+            'target_url' => esc_url_raw( $target_url ),
         );
     }
 

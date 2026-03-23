@@ -10,10 +10,7 @@ declare(strict_types=1);
 
 namespace WPAlias\Tests\Unit;
 
-use Brain\Monkey;
 use Brain\Monkey\Functions;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
 use Alias_Manager_DB;
 
 /**
@@ -22,31 +19,8 @@ use Alias_Manager_DB;
  * Da die Klasse vollständig auf $wpdb aufbaut, wird das globale $wpdb-Objekt
  * durch einen Mockery-Mock ersetzt. Datenbankoperationen finden nicht statt.
  */
-final class AliasDBTest extends TestCase
+final class AliasDBTest extends WpDbTestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var \Mockery\MockInterface */
-    private $wpdb;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        Monkey\setUp();
-
-        $this->wpdb         = \Mockery::mock('wpdb');
-        $this->wpdb->prefix = 'wp_';
-
-        // phpcs:ignore WordPress.WP.GlobalVariablesOverride
-        $GLOBALS['wpdb'] = $this->wpdb;
-    }
-
-    protected function tearDown(): void
-    {
-        Monkey\tearDown();
-        unset($GLOBALS['wpdb']);
-        parent::tearDown();
-    }
 
     // -------------------------------------------------------------------------
     // create_table()

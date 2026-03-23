@@ -53,13 +53,13 @@ class Alias_Manager_Admin {
         if (
             isset( $_GET['action'], $_GET['id'], $_GET['_wpnonce'] )
             && 'delete' === $_GET['action']
-            && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'alias_manager_delete_' . (int) $_GET['id'] )
+            && self::verify_nonce( $_GET['_wpnonce'], 'alias_manager_delete_' . (int) $_GET['id'] )
         ) {
             Alias_Manager_DB::delete( (int) $_GET['id'] );
             return '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Alias deleted.', 'alias-manager' ) . '</p></div>';
         }
 
-        if ( isset( $_POST['alias_manager_nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['alias_manager_nonce'] ) ), 'alias_manager_save' ) ) {
+        if ( isset( $_POST['alias_manager_nonce'] ) && self::verify_nonce( $_POST['alias_manager_nonce'], 'alias_manager_save' ) ) {
             $alias      = trim( sanitize_text_field( wp_unslash( $_POST['alias'] ?? '' ) ), '/' );
             $target_url = esc_url_raw( wp_unslash( $_POST['target_url'] ?? '' ) );
             $edit_id    = absint( wp_unslash( $_POST['edit_id'] ?? 0 ) );
@@ -92,6 +92,10 @@ class Alias_Manager_Admin {
             return Alias_Manager_DB::get( (int) $_GET['id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         }
         return null;
+    }
+
+    private static function verify_nonce( $value, string $action ): bool {
+        return (bool) wp_verify_nonce( sanitize_text_field( wp_unslash( $value ) ), $action );
     }
 
     private static function prepare_view_data( ?object $editing ): array {
