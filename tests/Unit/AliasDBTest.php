@@ -59,11 +59,15 @@ final class AliasDBTest extends TestCase
             ->once()
             ->andReturn('DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
 
-        // dbDelta ist in tests/bootstrap.php als Stub definiert — kein Fehler erwartet.
         Alias_Manager_DB::create_table();
 
-        // Wenn wir hier ankommen, wurde kein Fehler geworfen.
-        $this->assertTrue(true);
+        $sql = $GLOBALS['_last_db_delta_sql'] ?? '';
+        $this->assertStringContainsString('id',         $sql);
+        $this->assertStringContainsString('alias',      $sql);
+        $this->assertStringContainsString('target_url', $sql);
+        $this->assertStringContainsString('created_at', $sql);
+        $this->assertStringContainsString('UNIQUE KEY', $sql);
+        $this->assertStringContainsString('utf8mb4',    $sql);
     }
 
     // -------------------------------------------------------------------------
@@ -281,6 +285,18 @@ final class AliasDBTest extends TestCase
     // -------------------------------------------------------------------------
     // all()
     // -------------------------------------------------------------------------
+
+    public function test_all_returns_empty_array_when_no_rows(): void
+    {
+        $this->wpdb
+            ->shouldReceive('get_results')
+            ->once()
+            ->andReturn([]);
+
+        $result = Alias_Manager_DB::all();
+
+        $this->assertSame([], $result);
+    }
 
     public function test_all_returns_all_rows_ordered_by_alias(): void
     {

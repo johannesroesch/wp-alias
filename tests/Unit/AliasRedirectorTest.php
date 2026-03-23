@@ -165,6 +165,36 @@ final class AliasRedirectorTest extends TestCase
         Alias_Manager_Redirector::maybe_redirect();
     }
 
+    public function test_redirect_ignores_query_string_in_request_uri(): void
+    {
+        $_SERVER['REQUEST_URI'] = '/my-alias?utm_source=email&utm_medium=cpc';
+
+        Functions\expect('is_admin')->once()->andReturn(false);
+        Functions\expect('wp_doing_ajax')->once()->andReturn(false);
+        Functions\expect('wp_doing_cron')->once()->andReturn(false);
+        Functions\expect('home_url')->once()->andReturn('https://example.com');
+
+        // find_by_alias muss mit 'my-alias' aufgerufen werden, nicht mit dem Query-String
+        $this->wpdb
+            ->shouldReceive('prepare')
+            ->once()
+            ->with(\Mockery::type('string'), 'my-alias')
+            ->andReturn('...');
+
+        $this->wpdb->shouldReceive('get_var')->once()->andReturn('https://example.com/page');
+
+        Functions\expect('wp_redirect')
+            ->once()
+            ->with('https://example.com/page', 301)
+            ->andReturnUsing(function () {
+                throw new \RuntimeException('redirect_called');
+            });
+
+        $this->expectException(\RuntimeException::class);
+
+        Alias_Manager_Redirector::maybe_redirect();
+    }
+
     public function test_redirect_strips_subdirectory_prefix(): void
     {
         // WordPress liegt in /subdir/, Alias heißt "aliasB"

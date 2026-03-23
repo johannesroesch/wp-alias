@@ -218,6 +218,38 @@ final class AliasAdminTest extends TestCase
     // render_page() – Save: neuer Alias
     // -------------------------------------------------------------------------
 
+    public function test_render_page_trims_slashes_from_alias_before_save(): void
+    {
+        $_POST = [
+            'alias_manager_nonce' => 'valid',
+            'alias'               => '/summer-sale/',
+            'target_url'          => 'https://example.com/shop',
+            'edit_id'             => '0',
+        ];
+
+        Functions\expect('current_user_can')->once()->andReturn(true);
+        Functions\expect('wp_verify_nonce')->once()->andReturn(true);
+        Functions\when('esc_url_raw')->returnArg();
+        Functions\when('absint')->alias('intval');
+
+        // Slashes müssen vor dem Speichern entfernt werden: '/summer-sale/' → 'summer-sale'
+        $this->wpdb
+            ->shouldReceive('insert')
+            ->once()
+            ->with(
+                'wp_aliases',
+                ['alias' => 'summer-sale', 'target_url' => 'https://example.com/shop'],
+                ['%s', '%s']
+            )
+            ->andReturn(1);
+
+        $this->setupRenderMocks();
+
+        ob_start();
+        Alias_Manager_Admin::render_page();
+        ob_get_clean();
+    }
+
     public function test_render_page_save_new_alias_success(): void
     {
         $_POST = [

@@ -22,8 +22,12 @@ if ( ! function_exists( 'esc_sql' ) ) {
 }
 
 // dbDelta-Stub: verhindert require_once auf wp-admin/includes/upgrade.php in Tests.
+// Speichert das SQL in $GLOBALS für Assertions in Tests.
 if ( ! function_exists( 'dbDelta' ) ) {
-    function dbDelta( $sql ) { return []; }
+    function dbDelta( $sql ) {
+        $GLOBALS['_last_db_delta_sql'] = $sql;
+        return [];
+    }
 }
 
 // Fake upgrade.php, damit create_table() den require_once durchläuft ohne Fehler.
