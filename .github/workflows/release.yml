@@ -34,12 +34,29 @@ jobs:
         run: ./vendor/bin/phpunit --no-progress
 
   # -----------------------------------------------------------------------
-  # 2. Produktions-ZIP bauen und GitHub-Release erstellen
+  # 2. WordPress Plugin Check
+  # -----------------------------------------------------------------------
+  plugin-check:
+    name: WordPress Plugin Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: WordPress Plugin Check ausführen
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: './'
+          exclude-directories: 'vendor,tests'
+
+  # -----------------------------------------------------------------------
+  # 3. Produktions-ZIP bauen und GitHub-Release erstellen
   # -----------------------------------------------------------------------
   release:
     name: Release bauen & veröffentlichen
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test, plugin-check]
 
     steps:
       - name: Checkout
