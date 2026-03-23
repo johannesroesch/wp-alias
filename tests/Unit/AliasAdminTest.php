@@ -7,10 +7,10 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use WP_Alias_Admin;
+use Alias_Manager_Admin;
 
 /**
- * Tests für WP_Alias_Admin.
+ * Tests für Alias_Manager_Admin.
  *
  * Geprüft werden die Hook-Registrierung und grundlegende
  * Capabilities-Absicherung. Die vollständige Render-Logik
@@ -40,9 +40,9 @@ final class AliasAdminTest extends TestCase
     {
         Functions\expect('add_action')
             ->once()
-            ->with('admin_menu', [\WP_Alias_Admin::class, 'register_menu']);
+            ->with('admin_menu', [\Alias_Manager_Admin::class, 'register_menu']);
 
-        WP_Alias_Admin::init();
+        Alias_Manager_Admin::init();
     }
 
     // -------------------------------------------------------------------------
@@ -58,14 +58,14 @@ final class AliasAdminTest extends TestCase
         Functions\expect('add_options_page')
             ->once()
             ->with(
-                'WP Alias',
-                'WP Alias',
+                'Alias Manager',
+                'Alias Manager',
                 'manage_options',
-                'wp-alias',
-                [\WP_Alias_Admin::class, 'render_page']
+                'alias-manager',
+                [\Alias_Manager_Admin::class, 'render_page']
             );
 
-        WP_Alias_Admin::register_menu();
+        Alias_Manager_Admin::register_menu();
     }
 
     // -------------------------------------------------------------------------
@@ -83,7 +83,7 @@ final class AliasAdminTest extends TestCase
         Functions\expect('wp_nonce_field')->never();
 
         ob_start();
-        WP_Alias_Admin::render_page();
+        Alias_Manager_Admin::render_page();
         $output = ob_get_clean();
 
         $this->assertSame('', $output);

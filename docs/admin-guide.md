@@ -1,4 +1,4 @@
-# Administrationshandbuch – WP Alias
+# Administrationshandbuch – Alias Manager
 
 Dieses Handbuch richtet sich an WordPress-Administratoren, die das Plugin installieren, konfigurieren und warten.
 
@@ -21,19 +21,19 @@ Das Plugin hat keine externen PHP-Abhängigkeiten (kein Composer-Paket im Produk
 
 ### Methode 1: Manuell via FTP / SFTP
 
-1. Den Ordner `wp-alias` (oder den entpackten Inhalt aus `wp-alias.zip`) in das Verzeichnis `wp-content/plugins/` auf dem Server hochladen.
-2. Im WordPress-Admin unter **Plugins → Installierte Plugins** das Plugin **WP Alias** aktivieren.
+1. Den Ordner `alias-manager` (oder den entpackten Inhalt aus `alias-manager.zip`) in das Verzeichnis `wp-content/plugins/` auf dem Server hochladen.
+2. Im WordPress-Admin unter **Plugins → Installierte Plugins** das Plugin **Alias Manager** aktivieren.
 
 ### Methode 2: Upload über das WordPress-Admin-Backend
 
 1. Im WordPress-Admin auf **Plugins → Installieren** klicken.
 2. Den Tab **Plugin hochladen** wählen.
-3. Die Datei `wp-alias.zip` auswählen und auf **Jetzt installieren** klicken.
+3. Die Datei `alias-manager.zip` auswählen und auf **Jetzt installieren** klicken.
 4. Anschließend **Plugin aktivieren** klicken.
 
 ### Was bei der Aktivierung passiert
 
-Beim Aktivieren legt das Plugin automatisch die Datenbanktabelle `{prefix}_aliases` an (Standard: `wp_aliases`). Bestehende Tabellen werden durch `dbDelta` nicht überschrieben.
+Beim Aktivieren legt das Plugin automatisch die Datenbanktabelle `{prefix}_aliases` an (Standard: `alias_manageres`). Bestehende Tabellen werden durch `dbDelta` nicht überschrieben.
 
 ---
 
@@ -46,7 +46,7 @@ Das Plugin prüft die WordPress-Capability `manage_options` für alle Admin-Seit
 ## Datenbanktabelle
 
 ```sql
-CREATE TABLE wp_aliases (
+CREATE TABLE alias_manageres (
     id         mediumint(9)  NOT NULL AUTO_INCREMENT,
     alias      varchar(255)  NOT NULL,
     target_url varchar(2000) NOT NULL,
@@ -65,17 +65,17 @@ CREATE TABLE wp_aliases (
 
 ### Deaktivieren
 
-Das Plugin kann jederzeit deaktiviert werden (**Plugins → WP Alias → Deaktivieren**). Die Datenbanktabelle und alle gespeicherten Aliase bleiben erhalten, Weiterleitungen sind jedoch inaktiv.
+Das Plugin kann jederzeit deaktiviert werden (**Plugins → Alias Manager → Deaktivieren**). Die Datenbanktabelle und alle gespeicherten Aliase bleiben erhalten, Weiterleitungen sind jedoch inaktiv.
 
 ### Deinstallieren / Tabelle entfernen
 
 Das Plugin löscht die Datenbanktabelle **nicht** automatisch (Datenschutz vor versehentlichem Datenverlust). Um die Tabelle manuell zu entfernen:
 
 ```sql
-DROP TABLE IF EXISTS wp_aliases;
+DROP TABLE IF EXISTS alias_manageres;
 ```
 
-Oder via phpMyAdmin / Adminer die Tabelle `wp_aliases` löschen.
+Oder via phpMyAdmin / Adminer die Tabelle `alias_manageres` löschen.
 
 ---
 

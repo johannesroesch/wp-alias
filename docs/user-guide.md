@@ -1,4 +1,4 @@
-# Benutzerhandbuch – WP Alias
+# Benutzerhandbuch – Alias Manager
 
 Dieses Handbuch richtet sich an Redakteure und alle, die Aliase im WordPress-Backend verwalten möchten. Technische Vorkenntnisse sind nicht erforderlich.
 
@@ -21,7 +21,7 @@ Aliase sind nützlich für:
 
 ## Alias anlegen
 
-1. Im WordPress-Admin auf **Einstellungen → WP Alias** klicken.
+1. Im WordPress-Admin auf **Einstellungen → Alias Manager** klicken.
 2. Im Formular **„Neuen Alias anlegen"** die Felder ausfüllen:
 
 ### Alias-Pfad

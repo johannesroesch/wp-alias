@@ -71,14 +71,14 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.VERSION }}
         run: |
-          sed -i "s/^\( \* Version:\s*\).*/\1${VERSION}/" wp-alias.php
-          sed -i "s/^define( 'WP_ALIAS_VERSION', '[^']*' );/define( 'WP_ALIAS_VERSION', '${VERSION}' );/" wp-alias.php
+          sed -i "s/^\( \* Version:\s*\).*/\1${VERSION}/" alias-manager.php
+          sed -i "s/^define( 'ALIAS_MANAGER_VERSION', '[^']*' );/define( 'ALIAS_MANAGER_VERSION', '${VERSION}' );/" alias-manager.php
 
       - name: Produktions-ZIP erstellen
         env:
           VERSION: ${{ steps.version.outputs.VERSION }}
         run: |
-          mkdir -p build/wp-alias
+          mkdir -p build/alias-manager
 
           rsync -a \
             --exclude='.git/' \
@@ -92,13 +92,14 @@ jobs:
             --exclude='.gitignore' \
             --exclude='run-tests.php' \
             --exclude='test-results.*' \
-            . build/wp-alias/
+            --exclude='wp-alias.php' \
+            . build/alias-manager/
 
           cd build
-          zip -r "../wp-alias-${VERSION}.zip" wp-alias/
+          zip -r "../alias-manager-${VERSION}.zip" alias-manager/
           cd ..
 
-          echo "ZIP: wp-alias-${VERSION}.zip ($(du -sh wp-alias-${VERSION}.zip | cut -f1))"
+          echo "ZIP: alias-manager-${VERSION}.zip ($(du -sh alias-manager-${VERSION}.zip | cut -f1))"
 
       - name: GitHub-Release erstellen
         uses: softprops/action-gh-release@v2
@@ -106,4 +107,4 @@ jobs:
           name: v${{ steps.version.outputs.VERSION }}
           tag_name: ${{ github.ref_name }}
           generate_release_notes: true
-          files: wp-alias-${{ steps.version.outputs.VERSION }}.zip
+          files: alias-manager-${{ steps.version.outputs.VERSION }}.zip

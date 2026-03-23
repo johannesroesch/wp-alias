@@ -7,10 +7,10 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use WP_Alias_Redirector;
+use Alias_Manager_Redirector;
 
 /**
- * Tests für WP_Alias_Redirector.
+ * Tests für Alias_Manager_Redirector.
  *
  * Alle WordPress-Funktionen (is_admin, wp_doing_ajax, wp_doing_cron,
  * wp_unslash, wp_parse_url, home_url, wp_redirect) werden per Brain\Monkey gemockt.
@@ -57,7 +57,7 @@ final class AliasRedirectorTest extends TestCase
         Functions\expect('is_admin')->once()->andReturn(true);
         Functions\expect('wp_redirect')->never();
 
-        WP_Alias_Redirector::maybe_redirect();
+        Alias_Manager_Redirector::maybe_redirect();
     }
 
     public function test_no_redirect_when_doing_ajax(): void
@@ -66,7 +66,7 @@ final class AliasRedirectorTest extends TestCase
         Functions\expect('wp_doing_ajax')->once()->andReturn(true);
         Functions\expect('wp_redirect')->never();
 
-        WP_Alias_Redirector::maybe_redirect();
+        Alias_Manager_Redirector::maybe_redirect();
     }
 
     public function test_no_redirect_when_doing_cron(): void
@@ -76,7 +76,7 @@ final class AliasRedirectorTest extends TestCase
         Functions\expect('wp_doing_cron')->once()->andReturn(true);
         Functions\expect('wp_redirect')->never();
 
-        WP_Alias_Redirector::maybe_redirect();
+        Alias_Manager_Redirector::maybe_redirect();
     }
 
     public function test_no_redirect_when_request_path_is_empty(): void
@@ -89,7 +89,7 @@ final class AliasRedirectorTest extends TestCase
         Functions\expect('home_url')->once()->andReturn('https://example.com');
         Functions\expect('wp_redirect')->never();
 
-        WP_Alias_Redirector::maybe_redirect();
+        Alias_Manager_Redirector::maybe_redirect();
     }
 
     public function test_no_redirect_when_alias_not_found(): void
@@ -106,7 +106,7 @@ final class AliasRedirectorTest extends TestCase
 
         Functions\expect('wp_redirect')->never();
 
-        WP_Alias_Redirector::maybe_redirect();
+        Alias_Manager_Redirector::maybe_redirect();
     }
 
     // -------------------------------------------------------------------------
@@ -142,7 +142,7 @@ final class AliasRedirectorTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('redirect_called');
 
-        WP_Alias_Redirector::maybe_redirect();
+        Alias_Manager_Redirector::maybe_redirect();
     }
 
     public function test_redirect_strips_subdirectory_prefix(): void
@@ -173,7 +173,7 @@ final class AliasRedirectorTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
 
-        WP_Alias_Redirector::maybe_redirect();
+        Alias_Manager_Redirector::maybe_redirect();
     }
 
     public function test_redirect_handles_trailing_slash_in_request(): void
@@ -202,6 +202,6 @@ final class AliasRedirectorTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
 
-        WP_Alias_Redirector::maybe_redirect();
+        Alias_Manager_Redirector::maybe_redirect();
     }
 }

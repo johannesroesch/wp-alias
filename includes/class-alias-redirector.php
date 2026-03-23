@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class WP_Alias_Redirector {
+class Alias_Manager_Redirector {
 
     public static function maybe_redirect() {
         if ( is_admin() || wp_doing_ajax() || wp_doing_cron() ) {
@@ -25,7 +25,7 @@ class WP_Alias_Redirector {
             return;
         }
 
-        $target = WP_Alias_DB::find_by_alias( $request_path );
+        $target = Alias_Manager_DB::find_by_alias( $request_path );
 
         if ( $target ) {
             // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- Target URL is admin-controlled and stored in the database; external redirects are intentional.

@@ -7,10 +7,10 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use WP_Alias_DB;
+use Alias_Manager_DB;
 
 /**
- * Tests für WP_Alias_DB.
+ * Tests für Alias_Manager_DB.
  *
  * Da die Klasse vollständig auf $wpdb aufbaut, wird das globale $wpdb-Objekt
  * durch einen Mockery-Mock ersetzt. Datenbankoperationen finden nicht statt.
@@ -47,13 +47,13 @@ final class AliasDBTest extends TestCase
 
     public function test_table_returns_prefixed_table_name(): void
     {
-        $this->assertSame('wp_aliases', WP_Alias_DB::table());
+        $this->assertSame('wp_aliases', Alias_Manager_DB::table());
     }
 
     public function test_table_respects_custom_prefix(): void
     {
         $this->wpdb->prefix = 'mysite_';
-        $this->assertSame('mysite_aliases', WP_Alias_DB::table());
+        $this->assertSame('mysite_aliases', Alias_Manager_DB::table());
     }
 
     // -------------------------------------------------------------------------
@@ -76,7 +76,7 @@ final class AliasDBTest extends TestCase
             ->once()
             ->andReturn('https://example.com/pageA');
 
-        $result = WP_Alias_DB::find_by_alias('aliasA');
+        $result = Alias_Manager_DB::find_by_alias('aliasA');
 
         $this->assertSame('https://example.com/pageA', $result);
     }
@@ -93,7 +93,7 @@ final class AliasDBTest extends TestCase
             ->once()
             ->andReturn(null);
 
-        $result = WP_Alias_DB::find_by_alias('unknown');
+        $result = Alias_Manager_DB::find_by_alias('unknown');
 
         $this->assertNull($result);
     }
@@ -127,7 +127,7 @@ final class AliasDBTest extends TestCase
             )
             ->andReturn(1);
 
-        $result = WP_Alias_DB::insert('my-alias', 'https://example.com/target');
+        $result = Alias_Manager_DB::insert('my-alias', 'https://example.com/target');
 
         $this->assertSame(1, $result);
     }
@@ -142,7 +142,7 @@ final class AliasDBTest extends TestCase
             ->once()
             ->andReturn(false);
 
-        $result = WP_Alias_DB::insert('duplicate', 'https://example.com/page');
+        $result = Alias_Manager_DB::insert('duplicate', 'https://example.com/page');
 
         $this->assertFalse($result);
     }
@@ -168,7 +168,7 @@ final class AliasDBTest extends TestCase
             )
             ->andReturn(1);
 
-        $result = WP_Alias_DB::update(42, 'new-alias', 'https://example.com/new-target');
+        $result = Alias_Manager_DB::update(42, 'new-alias', 'https://example.com/new-target');
 
         $this->assertSame(1, $result);
     }
@@ -191,7 +191,7 @@ final class AliasDBTest extends TestCase
             ->andReturn(1);
 
         // Übergabe als String – soll trotzdem als int ankommen
-        WP_Alias_DB::update('7', 'alias', 'https://example.com/page');
+        Alias_Manager_DB::update('7', 'alias', 'https://example.com/page');
     }
 
     // -------------------------------------------------------------------------
@@ -206,7 +206,7 @@ final class AliasDBTest extends TestCase
             ->with('wp_aliases', ['id' => 5], ['%d'])
             ->andReturn(1);
 
-        $result = WP_Alias_DB::delete(5);
+        $result = Alias_Manager_DB::delete(5);
 
         $this->assertSame(1, $result);
     }
@@ -219,7 +219,7 @@ final class AliasDBTest extends TestCase
             ->with(\Mockery::any(), ['id' => 3], \Mockery::any())
             ->andReturn(1);
 
-        WP_Alias_DB::delete('3');
+        Alias_Manager_DB::delete('3');
     }
 
     // -------------------------------------------------------------------------
@@ -240,7 +240,7 @@ final class AliasDBTest extends TestCase
             ->once()
             ->andReturn($expected);
 
-        $result = WP_Alias_DB::get(1);
+        $result = Alias_Manager_DB::get(1);
 
         $this->assertSame($expected, $result);
     }
@@ -250,7 +250,7 @@ final class AliasDBTest extends TestCase
         $this->wpdb->shouldReceive('prepare')->once()->andReturn('...');
         $this->wpdb->shouldReceive('get_row')->once()->andReturn(null);
 
-        $this->assertNull(WP_Alias_DB::get(999));
+        $this->assertNull(Alias_Manager_DB::get(999));
     }
 
     // -------------------------------------------------------------------------
@@ -269,7 +269,7 @@ final class AliasDBTest extends TestCase
             ->once()
             ->andReturn($rows);
 
-        $result = WP_Alias_DB::all();
+        $result = Alias_Manager_DB::all();
 
         $this->assertCount(2, $result);
         $this->assertSame('alpha', $result[0]->alias);

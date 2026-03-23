@@ -1,4 +1,4 @@
-=== WP Alias ===
+=== Alias Manager ===
 Contributors: johannesroesch
 Tags: redirect, alias, url, permalink, 301
 Requires at least: 5.9
@@ -12,7 +12,7 @@ Create URL aliases for your WordPress pages with automatic 301 redirects.
 
 == Description ==
 
-Alias Redirects lets you define any number of alternative URL paths (aliases) for existing WordPress pages or any target URL. When a visitor opens an alias path, they are transparently redirected to the stored target via HTTP 301.
+Alias Manager lets you define any number of alternative URL paths (aliases) for existing WordPress pages or any target URL. When a visitor opens an alias path, they are transparently redirected to the stored target via HTTP 301.
 
 **Example:**
 `https://example.com/summer-sale` → `https://example.com/shop/offers/summer-2024`
@@ -21,7 +21,7 @@ Alias Redirects lets you define any number of alternative URL paths (aliases) fo
 
 * Unlimited aliases per site
 * Redirects to any WordPress page or custom URL, including external URLs
-* Admin UI under Settings → Alias Redirects
+* Admin UI under Settings → Alias Manager
 * 301 (permanent) redirects for SEO-friendly forwarding
 * Works with WordPress installed in a subdirectory
 * CSRF protection via WordPress nonces
@@ -29,9 +29,9 @@ Alias Redirects lets you define any number of alternative URL paths (aliases) fo
 
 == Installation ==
 
-1. Upload the `wp-alias` folder to the `/wp-content/plugins/` directory.
+1. Upload the `alias-manager` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the **Plugins** menu in WordPress.
-3. Go to **Settings → Alias Redirects** and start adding aliases.
+3. Go to **Settings → Alias Manager** and start adding aliases.
 
 == Frequently Asked Questions ==
 

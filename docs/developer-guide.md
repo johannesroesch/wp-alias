@@ -1,4 +1,4 @@
-# Entwicklerdokumentation – WP Alias
+# Entwicklerdokumentation – Alias Manager
 
 Diese Dokumentation richtet sich an PHP-Entwickler, die das Plugin verstehen, erweitern oder in eigene Projekte integrieren möchten.
 
@@ -7,8 +7,8 @@ Diese Dokumentation richtet sich an PHP-Entwickler, die das Plugin verstehen, er
 ## Projektstruktur
 
 ```
-wp-alias/
-├── wp-alias.php                    # Plugin-Header, Einstiegspunkt, Hook-Registrierung
+alias-manager/
+├── alias-manager.php                    # Plugin-Header, Einstiegspunkt, Hook-Registrierung
 ├── composer.json                   # Dev-Abhängigkeiten (PHPUnit, Brain\Monkey)
 ├── phpunit.xml                     # PHPUnit-Konfiguration
 ├── README.md
@@ -37,7 +37,7 @@ wp-alias/
 
 ```
 ┌─────────────────────────────────────────────┐
-│              wp-alias.php                   │  Einstiegspunkt
+│              alias-manager.php                   │  Einstiegspunkt
 │  register_activation_hook / add_action      │  Hook-Verdrahtung
 └──────────┬───────────────────┬──────────────┘
            │                   │
@@ -118,12 +118,12 @@ CREATE TABLE {prefix}_aliases (
 
 Das Plugin stellt folgende WordPress-Hooks zur Verfügung, über die das Verhalten angepasst werden kann.
 
-### Filter: `wp_alias_redirect_status`
+### Filter: `alias_manager_redirect_status`
 
 Ändert den HTTP-Statuscode der Weiterleitung (Standard: 301).
 
 ```php
-add_filter( 'wp_alias_redirect_status', function ( int $status, string $alias, string $target ): int {
+add_filter( 'alias_manager_redirect_status', function ( int $status, string $alias, string $target ): int {
     // Temporäre Weiterleitung für bestimmte Aliase
     if ( str_starts_with( $alias, 'temp-' ) ) {
         return 302;
@@ -134,25 +134,25 @@ add_filter( 'wp_alias_redirect_status', function ( int $status, string $alias, s
 
 > **Hinweis:** Dieser Filter muss im Plugin selbst ergänzt werden (siehe [Erweiterungen](#erweiterungen)).
 
-### Filter: `wp_alias_target_url`
+### Filter: `alias_manager_target_url`
 
 Ermöglicht die Manipulation der Ziel-URL vor dem Redirect.
 
 ```php
-add_filter( 'wp_alias_target_url', function ( string $target_url, string $alias ): string {
+add_filter( 'alias_manager_target_url', function ( string $target_url, string $alias ): string {
     // UTM-Parameter anhängen
     return add_query_arg( 'utm_source', 'alias', $target_url );
 }, 10, 2 );
 ```
 
-### Action: `wp_alias_before_redirect`
+### Action: `alias_manager_before_redirect`
 
 Wird aufgerufen, kurz bevor der Redirect ausgeführt wird.
 
 ```php
-add_action( 'wp_alias_before_redirect', function ( string $alias, string $target_url ): void {
+add_action( 'alias_manager_before_redirect', function ( string $alias, string $target_url ): void {
     // Redirect in eigenem Log erfassen
-    error_log( "WP Alias: {$alias} → {$target_url}" );
+    error_log( "Alias Manager: {$alias} → {$target_url}" );
 }, 10, 2 );
 ```
 
@@ -168,9 +168,9 @@ Um eigene Filter zu unterstützen, `maybe_redirect()` in `class-alias-redirector
 
 ```php
 if ( $target ) {
-    $target = apply_filters( 'wp_alias_target_url', $target, $request_path );
-    $status = apply_filters( 'wp_alias_redirect_status', 301, $request_path, $target );
-    do_action( 'wp_alias_before_redirect', $request_path, $target );
+    $target = apply_filters( 'alias_manager_target_url', $target, $request_path );
+    $status = apply_filters( 'alias_manager_redirect_status', 301, $request_path, $target );
+    do_action( 'alias_manager_before_redirect', $request_path, $target );
     wp_redirect( $target, $status );
     exit;
 }
@@ -185,7 +185,7 @@ Die Tabelle in `render_page()` kann durch Erweiterung der `WP_List_Table`-Klasse
 Für Multisite-Netzwerke muss `create_table()` für jede Sub-Site separat ausgeführt werden:
 
 ```php
-// In wp-alias.php statt register_activation_hook:
+// In alias-manager.php statt register_activation_hook:
 add_action( 'wpmu_new_blog', function ( int $blog_id ): void {
     switch_to_blog( $blog_id );
     WP_Alias_DB::create_table();

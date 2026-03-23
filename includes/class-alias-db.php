@@ -3,9 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class WP_Alias_DB {
+class Alias_Manager_DB {
 
-    const TABLE_NAME = 'wp_aliases';
+    const TABLE_NAME = 'aliases';
 
     public static function table() {
         global $wpdb;

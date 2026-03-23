@@ -1,5 +1,5 @@
 {
-    "name": "wp-alias/wp-alias",
+    "name": "alias-manager/alias-manager",
     "description": "WordPress plugin to manage URL aliases with 301 redirects",
     "type": "wordpress-plugin",
     "license": "GPL-2.0+",
