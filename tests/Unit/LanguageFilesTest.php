@@ -18,18 +18,23 @@ final class LanguageFilesTest extends TestCase
         self::$languagesDir = dirname(__DIR__, 2) . '/languages';
     }
 
+    private static function langDir(): string
+    {
+        return dirname(__DIR__, 2) . '/languages';
+    }
+
     // -------------------------------------------------------------------------
     // .pot – Vorlage
     // -------------------------------------------------------------------------
 
     public function test_pot_file_exists(): void
     {
-        $this->assertFileExists(self::$languagesDir . '/alias-manager.pot');
+        $this->assertFileExists(self::langDir() . '/alias-manager.pot');
     }
 
     public function test_pot_contains_msgids(): void
     {
-        $msgids = self::parseMsgids(self::$languagesDir . '/alias-manager.pot');
+        $msgids = self::parseMsgids(self::langDir() . '/alias-manager.pot');
         $this->assertNotEmpty($msgids, 'alias-manager.pot enthält keine msgid-Einträge.');
     }
 
@@ -42,7 +47,7 @@ final class LanguageFilesTest extends TestCase
      */
     public function test_po_file_has_all_translations(string $poFile): void
     {
-        $potMsgids    = self::parseMsgids(self::$languagesDir . '/alias-manager.pot');
+        $potMsgids    = self::parseMsgids(self::langDir() . '/alias-manager.pot');
         $translations = self::parseTranslations($poFile);
         $missing      = [];
 
@@ -85,7 +90,8 @@ final class LanguageFilesTest extends TestCase
 
     public static function poFileProvider(): array
     {
-        $files = glob(self::$languagesDir . '/alias-manager-*.po') ?: [];
+        $dir   = dirname(__DIR__, 2) . '/languages';
+        $files = glob($dir . '/alias-manager-*.po') ?: [];
 
         return array_combine(
             array_map('basename', $files),
