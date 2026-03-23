@@ -32,28 +32,29 @@ class WP_Alias_DB {
 
     public static function all() {
         global $wpdb;
-        $table = self::table();
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table; table name is generated internally and safe.
+        $table = esc_sql( self::table() );
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table; table name is escaped and generated internally.
         return $wpdb->get_results( "SELECT * FROM `{$table}` ORDER BY alias ASC" );
     }
 
     public static function get( $id ) {
         global $wpdb;
-        $table = self::table();
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table; table name is generated internally and safe.
+        $table = esc_sql( self::table() );
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table; table name is escaped and generated internally.
         return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `{$table}` WHERE id = %d", $id ) );
     }
 
     public static function find_by_alias( $alias ) {
         global $wpdb;
-        $table = self::table();
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table; table name is generated internally and safe.
+        $table = esc_sql( self::table() );
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Custom table; table name is escaped and generated internally.
         return $wpdb->get_var( $wpdb->prepare( "SELECT target_url FROM `{$table}` WHERE alias = %s", $alias ) );
     }
 
     public static function insert( $alias, $target_url ) {
         global $wpdb;
-        return $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Write operation; caching not applicable.
+        return $wpdb->insert(
             self::table(),
             array(
                 'alias'      => sanitize_text_field( $alias ),
@@ -65,7 +66,8 @@ class WP_Alias_DB {
 
     public static function update( $id, $alias, $target_url ) {
         global $wpdb;
-        return $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Write operation; caching not applicable.
+        return $wpdb->update(
             self::table(),
             array(
                 'alias'      => sanitize_text_field( $alias ),
