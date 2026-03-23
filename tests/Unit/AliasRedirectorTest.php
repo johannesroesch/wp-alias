@@ -65,6 +65,7 @@ final class AliasRedirectorTest extends TestCase
         Functions\expect('wp_redirect')->never();
 
         Alias_Manager_Redirector::maybe_redirect();
+        $this->addToAssertionCount(1);
     }
 
     public function test_no_redirect_when_doing_ajax(): void
@@ -74,6 +75,7 @@ final class AliasRedirectorTest extends TestCase
         Functions\expect('wp_redirect')->never();
 
         Alias_Manager_Redirector::maybe_redirect();
+        $this->addToAssertionCount(1);
     }
 
     public function test_no_redirect_when_doing_cron(): void
@@ -84,6 +86,7 @@ final class AliasRedirectorTest extends TestCase
         Functions\expect('wp_redirect')->never();
 
         Alias_Manager_Redirector::maybe_redirect();
+        $this->addToAssertionCount(1);
     }
 
     public function test_no_redirect_when_request_uri_not_set(): void
@@ -97,6 +100,7 @@ final class AliasRedirectorTest extends TestCase
         Functions\expect('wp_redirect')->never();
 
         Alias_Manager_Redirector::maybe_redirect();
+        $this->addToAssertionCount(1);
     }
 
     public function test_no_redirect_when_request_path_is_empty(): void
@@ -110,6 +114,7 @@ final class AliasRedirectorTest extends TestCase
         Functions\expect('wp_redirect')->never();
 
         Alias_Manager_Redirector::maybe_redirect();
+        $this->addToAssertionCount(1);
     }
 
     public function test_no_redirect_when_alias_not_found(): void

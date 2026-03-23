@@ -93,6 +93,7 @@ final class AliasAdminTest extends TestCase
             ->with('admin_menu', [\Alias_Manager_Admin::class, 'register_menu']);
 
         Alias_Manager_Admin::init();
+        $this->addToAssertionCount(1);
     }
 
     // -------------------------------------------------------------------------
@@ -116,6 +117,7 @@ final class AliasAdminTest extends TestCase
             );
 
         Alias_Manager_Admin::register_menu();
+        $this->addToAssertionCount(1);
     }
 
     // -------------------------------------------------------------------------
